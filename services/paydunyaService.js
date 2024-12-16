@@ -83,7 +83,7 @@ const processInvoiceAndPayment = async (payload) => {
             );
         }
 
-        if (paymentResponse.data.status === 'success') {
+        if (paymentResponse.data.success === 'success') {
             return { success: true, data: paymentResponse.data };
         }
 
