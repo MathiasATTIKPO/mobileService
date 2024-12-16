@@ -34,6 +34,8 @@ const processInvoiceAndPayment = async (payload) => {
 
         const invoiceToken = invoiceResponse.data.token;
 
+        console.log("token:", invoiceToken);
+
         // Étape 2 : Effectuer le paiement en fonction du mode
         let paymentResponse;
 
