@@ -51,7 +51,7 @@ const processInvoiceAndPayment = async (payload) => {
                 name_t_money: STATIC_INFO.name,
                 email_t_money: STATIC_INFO.email,
                 phone_t_money: payload.phone_number, // Numéro de téléphone fourni par le client
-                invoice_token: invoiceToken, // Le token de la facture
+                payment_token: invoiceToken, // Le token de la facture
             };
 
             paymentResponse = await axios.post(
@@ -69,7 +69,7 @@ const processInvoiceAndPayment = async (payload) => {
                 moov_togo_email: STATIC_INFO.email,
                 moov_togo_customer_address: STATIC_INFO.address,
                 moov_togo_phone_number: payload.phone_number, // Numéro de téléphone fourni par le client
-                invoice_token: invoiceToken, // Le token de la facture
+                payment_token: invoiceToken, // Le token de la facture
             };
 
             paymentResponse = await axios.post(
