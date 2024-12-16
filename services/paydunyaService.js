@@ -82,12 +82,15 @@ const processInvoiceAndPayment = async (payload) => {
                 }
             );
         }
-
+        console.log("Statut :", paymentResponse.data.success);
+        
         if (paymentResponse.data.success === true ) {
-            return { success: true, data: paymentResponse.data };
+            return { success: true, data: paymentResponse.data };  
+            
+        }else{
+            return { success: false, error: 'Erreur lors de l’exécution du paiement' };
         }
 
-        return { success: false, error: 'Erreur lors de l’exécution du paiement' };
     } catch (error) {
         console.error('Erreur API PayDunya:', error.response?.data || error.message);
         return { success: false, error: 'Erreur interne du serveur' };
