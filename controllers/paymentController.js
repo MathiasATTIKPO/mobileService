@@ -16,21 +16,6 @@ const paymentSchema = Joi.object({
     payment_mode: Joi.string().valid('tmoney', 'moov').required().messages({
         'any.only': 'Payment mode must be one of tmoney or moov',
     }),
-    name: Joi.string().required().messages({
-        'string.base': 'Name must be a string',
-        'string.empty': 'Name cannot be empty',
-    }),
-    email: Joi.string().email().required().messages({
-        'string.email': 'Email must be a valid email address',
-        'string.empty': 'Email cannot be empty',
-    }),
-    address: Joi.string().when('payment_mode', {
-        is: 'moov',
-        then: Joi.required().messages({
-            'string.base': 'Address must be a string',
-            'string.empty': 'Address cannot be empty',
-        }),
-    }),
 });
 
 // Fonction pour traiter le paiement

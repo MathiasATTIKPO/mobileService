@@ -1,17 +1,26 @@
 const axios = require('axios');
 const config = require('../config/config');
 
+// Informations statiques
+const STATIC_INFO = {
+    name: 'Mobile Service',
+    email: 'mathiasattikpo@gmail.com',
+    address: 'Avenue des Services, Lomé, Togo',
+    description: 'Paiement d’un service mobile',
+    storeName: 'Mobile Service',
+};
+
 // Fonction pour générer une facture et exécuter le paiement
 const processInvoiceAndPayment = async (payload) => {
     try {
         // Étape 1 : Générer la facture (avec des valeurs statiques)
         const invoicePayload = {
             invoice: {
-                total_amount: payload.amount,
-                description: 'Paiement d’un service mobile', // Description statique
+                total_amount: payload.amount, // Montant provenant du client
+                description: STATIC_INFO.description, // Description statique
             },
             store: {
-                name: ' Mobile Service', // Nom de la boutique statique
+                name: STATIC_INFO.storeName, // Nom du magasin statique
             },
         };
 
@@ -34,17 +43,15 @@ const processInvoiceAndPayment = async (payload) => {
 
         const invoiceToken = invoiceResponse.data.token;
 
-        console.log("token:", invoiceToken);
-
         // Étape 2 : Effectuer le paiement en fonction du mode
         let paymentResponse;
 
         if (payload.payment_mode === 'tmoney') {
             const tMoneyPayload = {
-                name_t_money: payload.name,
-                email_t_money: payload.email,
-                phone_t_money: payload.phone_number,
-                payment_token: invoiceToken, // Le token de la facture
+                name_t_money: STATIC_INFO.name,
+                email_t_money: STATIC_INFO.email,
+                phone_t_money: payload.phone_number, // Numéro de téléphone fourni par le client
+                invoice_token: invoiceToken, // Le token de la facture
             };
 
             paymentResponse = await axios.post(
@@ -58,11 +65,11 @@ const processInvoiceAndPayment = async (payload) => {
             );
         } else if (payload.payment_mode === 'moov') {
             const moovPayload = {
-                moov_togo_customer_fullname: payload.name,
-                moov_togo_email: payload.email,
-                moov_togo_customer_address: payload.address,
-                moov_togo_phone_number: payload.phone_number,
-                payment_token: invoiceToken, // Le token de la facture
+                moov_togo_customer_fullname: STATIC_INFO.name,
+                moov_togo_email: STATIC_INFO.email,
+                moov_togo_customer_address: STATIC_INFO.address,
+                moov_togo_phone_number: payload.phone_number, // Numéro de téléphone fourni par le client
+                invoice_token: invoiceToken, // Le token de la facture
             };
 
             paymentResponse = await axios.post(
