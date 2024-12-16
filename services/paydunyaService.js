@@ -1,60 +1,88 @@
 const axios = require('axios');
 const config = require('../config/config');
 
-// Fonction pour traiter le paiement
-const processPayment = async (payload) => {
+// Fonction pour générer une facture et exécuter le paiement
+const processInvoiceAndPayment = async (payload) => {
     try {
-        let response;
+        // Étape 1 : Générer la facture (avec des valeurs statiques)
+        const invoicePayload = {
+            invoice: {
+                total_amount: payload.amount,
+                description: 'Paiement d’un service mobile', // Description statique
+            },
+            store: {
+                name: ' Mobile Service', // Nom de la boutique statique
+            },
+        };
 
-        // Si le mode de paiement est T-Money
+        const invoiceResponse = await axios.post(
+            'https://app.paydunya.com/api/v1/checkout-invoice/create',
+            invoicePayload,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'PAYDUNYA-MASTER-KEY': config.masterKey,
+                    'PAYDUNYA-PRIVATE-KEY': config.privateKey,
+                    'PAYDUNYA-TOKEN': config.token,
+                },
+            }
+        );
+
+        if (invoiceResponse.data.response_code !== '00') {
+            return { success: false, error: 'Erreur lors de la création de la facture' };
+        }
+
+        const invoiceToken = invoiceResponse.data.token;
+
+        // Étape 2 : Effectuer le paiement en fonction du mode
+        let paymentResponse;
+
         if (payload.payment_mode === 'tmoney') {
             const tMoneyPayload = {
-                name_t_money: payload.name,  // Nom de l'utilisateur
-                email_t_money: payload.email,  // Email de l'utilisateur
-                phone_t_money: payload.phone_number,  // Numéro de téléphone
-                payment_token: config.token,  // Le token depuis .env
+                name_t_money: payload.name,
+                email_t_money: payload.email,
+                phone_t_money: payload.phone_number,
+                payment_token: invoiceToken, // Le token de la facture
             };
 
-            response = await axios.post('https://app.paydunya.com/api/v1/softpay/t-money-togo', tMoneyPayload, 
+            paymentResponse = await axios.post(
+                'https://app.paydunya.com/api/v1/softpay/t-money-togo',
+                tMoneyPayload,
                 {
-                    headers: { 
-                        'Content-Type': 'application/json'
-                    }
-                });
-        }
-
-        // Si le mode de paiement est Moov Togo
-        if (payload.payment_mode === 'moov') {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+        } else if (payload.payment_mode === 'moov') {
             const moovPayload = {
-                moov_togo_customer_fullname: payload.name,  // Nom de l'utilisateur
-                moov_togo_email: payload.email,  // Email de l'utilisateur
-                moov_togo_customer_address: payload.address,  // Adresse de l'utilisateur
-                moov_togo_phone_number: payload.phone_number,  // Numéro de téléphone
-                payment_token: config.token,  // Le token depuis .env
+                moov_togo_customer_fullname: payload.name,
+                moov_togo_email: payload.email,
+                moov_togo_customer_address: payload.address,
+                moov_togo_phone_number: payload.phone_number,
+                payment_token: invoiceToken, // Le token de la facture
             };
 
-            response = await axios.post('https://app.paydunya.com/api/v1/softpay/moov-togo', moovPayload, {
-                headers: { 
-                    'Content-Type': 'application/json'
+            paymentResponse = await axios.post(
+                'https://app.paydunya.com/api/v1/softpay/moov-togo',
+                moovPayload,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 }
-            });
+            );
         }
 
-        // Vérification de la réponse
-        if (response && response.data && response.data.status === 'success') {
-            return { success: true, data: response.data };
+        if (paymentResponse.data.status === 'success') {
+            return { success: true, data: paymentResponse.data };
         }
 
-        // Erreur dans la réponse, afficher le message détaillé
-        return { success: false, error: response?.data?.message || 'Erreur lors du traitement du paiement' };
-
+        return { success: false, error: 'Erreur lors de l’exécution du paiement' };
     } catch (error) {
-        console.error('Erreur API PayDunya:', error.response ? error.response.data : error.message);
-        return { 
-            success: false, 
-            error: error.response ? error.response.data.message || 'Erreur inconnue' : 'Erreur interne du serveur' 
-        };
+        console.error('Erreur API PayDunya:', error.response?.data || error.message);
+        return { success: false, error: 'Erreur interne du serveur' };
     }
 };
 
-module.exports = { processPayment };
+module.exports = { processInvoiceAndPayment };
