@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const paydunyaService = require('../services/paydunyaService');
 
-// Validation des données d'entrée
+// Validation des données d'entrée avec ajout de name, email et address
 const paymentSchema = Joi.object({
     amount: Joi.number().integer().positive().required().messages({
         'number.base': 'Amount must be a number',
@@ -15,6 +15,21 @@ const paymentSchema = Joi.object({
     }),
     payment_mode: Joi.string().valid('tmoney', 'moov').required().messages({
         'any.only': 'Payment mode must be one of tmoney or moov',
+    }),
+    name: Joi.string().required().messages({
+        'string.base': 'Name must be a string',
+        'string.empty': 'Name cannot be empty',
+    }),
+    email: Joi.string().email().required().messages({
+        'string.email': 'Email must be a valid email address',
+        'string.empty': 'Email cannot be empty',
+    }),
+    address: Joi.string().when('payment_mode', {
+        is: 'moov',
+        then: Joi.required().messages({
+            'string.base': 'Address must be a string',
+            'string.empty': 'Address cannot be empty',
+        }),
     }),
 });
 

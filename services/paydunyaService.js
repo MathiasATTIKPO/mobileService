@@ -3,9 +3,6 @@ const config = require('../config/config');
 
 // Informations statiques
 const STATIC_INFO = {
-    name: 'Mobile Service',
-    email: 'mathiasattikpo@gmail.com',
-    address: 'Avenue des Services, Lomé, Togo',
     description: 'Paiement d’un service mobile',
     storeName: 'Mobile Service',
 };
@@ -48,8 +45,8 @@ const processInvoiceAndPayment = async (payload) => {
 
         if (payload.payment_mode === 'tmoney') {
             const tMoneyPayload = {
-                name_t_money: STATIC_INFO.name,
-                email_t_money: STATIC_INFO.email,
+                name_t_money: payload.name,
+                email_t_money: payload.email,
                 phone_t_money: payload.phone_number, // Numéro de téléphone fourni par le client
                 payment_token: invoiceToken, // Le token de la facture
             };
@@ -65,9 +62,9 @@ const processInvoiceAndPayment = async (payload) => {
             );
         } else if (payload.payment_mode === 'moov') {
             const moovPayload = {
-                moov_togo_customer_fullname: STATIC_INFO.name,
-                moov_togo_email: STATIC_INFO.email,
-                moov_togo_customer_address: STATIC_INFO.address,
+                moov_togo_customer_fullname: payload.name,
+                moov_togo_email: payload.email,
+                moov_togo_customer_address: payload.address,
                 moov_togo_phone_number: payload.phone_number, // Numéro de téléphone fourni par le client
                 payment_token: invoiceToken, // Le token de la facture
             };
