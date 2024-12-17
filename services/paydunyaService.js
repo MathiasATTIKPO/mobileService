@@ -3,8 +3,10 @@ const config = require('../config/config');
 
 // Informations statiques
 const STATIC_INFO = {
-    description: 'Paiement d’un service mobile',
-    storeName: 'Mobile Service',
+    description: 'Paiement d’un service mobile money',
+    storeName: ' Service  Mobile Money',
+    email : 'haekenterprise@gmail.com'
+
 };
 
 // Fonction pour générer une facture et exécuter le paiement
@@ -46,7 +48,7 @@ const processInvoiceAndPayment = async (payload) => {
         if (payload.payment_mode === 'tmoney') {
             const tMoneyPayload = {
                 name_t_money: payload.name,
-                email_t_money: payload.email,
+                email_t_money: STATIC_INFO.email,
                 phone_t_money: payload.phone_number, // Numéro de téléphone fourni par le client
                 payment_token: invoiceToken, // Le token de la facture
             };
@@ -63,7 +65,7 @@ const processInvoiceAndPayment = async (payload) => {
         } else if (payload.payment_mode === 'moov') {
             const moovPayload = {
                 moov_togo_customer_fullname: payload.name,
-                moov_togo_email: payload.email,
+                moov_togo_email: STATIC_INFO.email,
                 moov_togo_customer_address: payload.address,
                 moov_togo_phone_number: payload.phone_number, // Numéro de téléphone fourni par le client
                 payment_token: invoiceToken, // Le token de la facture
