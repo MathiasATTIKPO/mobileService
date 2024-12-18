@@ -12,7 +12,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api', paymentRoutes);
-app.use('/api/callback', callbackRoutes);
+app.use('/api', callbackRoutes);
 
 
 
