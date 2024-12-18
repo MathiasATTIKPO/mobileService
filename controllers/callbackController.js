@@ -4,7 +4,7 @@ const handleCallback = async (req, res) => {
     try {
         console.log('Callback reçu :', req.body);
     
-        const result = await processCallback(req.body.data);
+        //const result = await processCallback(req.body.data);
     
         res.status(200).json({
             status: 'success',
