@@ -1,5 +1,5 @@
 const express = require('express');
-const { handleCallback } = require('../controllers/callbackController');
+const { handleCallback } = require('../controllers/callBackController');
 
 const router = express.Router();
 
