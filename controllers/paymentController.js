@@ -20,9 +20,8 @@ const paymentSchema = Joi.object({
         'string.base': 'Name must be a string',
         'string.empty': 'Name cannot be empty',
     }),
-    email: Joi.string().email().required().messages({
+    email: Joi.string().email().messages({
         'string.email': 'Email must be a valid email address',
-        'string.empty': 'Email cannot be empty',
     }),
     address: Joi.string().when('payment_mode', {
         is: 'moov',

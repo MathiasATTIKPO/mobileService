@@ -10,6 +10,9 @@ app.use(express.json());
 
 // Routes
 app.use('/api', paymentRoutes);
+app.use('/api', callbackRoutes);
+
+
 
 // Lancer le serveur
 const PORT = process.env.PORT || 3002;
