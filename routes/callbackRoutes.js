@@ -1,9 +1,9 @@
+// routes/callbackRoutes.js
 const express = require('express');
-const { handleCallback } = require('../controllers/callbackController');
-
 const router = express.Router();
+const callbackController = require('../controllers/callbackController');
 
 // Route pour le callback
-router.post('/callback', handleCallback);
+router.post('/process-callback', callbackController.handleCallback);
 
 module.exports = router;
