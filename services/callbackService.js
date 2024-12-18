@@ -20,9 +20,9 @@ exports.processCallback = async (data) => {
         console.log('Payload préparé pour envoi:', responsePayload);
 
         // Optionnel : Envoi des données à une autre API
-        const apiResponse = await axios.post('https://example.com/target-api', responsePayload);
+        // const apiResponse = await axios.post('https://example.com/target-api', responsePayload);
 
-        return { success: true, data: apiResponse.data };
+        // return { success: true, data: apiResponse.data };
     } catch (error) {
         console.error('Erreur dans le service:', error.message);
         throw new Error('Traitement du callback échoué');
