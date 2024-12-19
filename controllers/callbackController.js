@@ -2,10 +2,17 @@ const { processCallback } = require('../services/callbackService');
 
 const handleCallback = async (req, res) => {
     try {
+        if (!req.body || !req.body.data) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Le corps de la requête est vide ou mal formaté',
+            });
+        }
+
         console.log('Callback reçu :', req.body);
-    
+
         const result = await processCallback(req.body.data);
-    
+
         res.status(200).json({
             status: 'success',
             message: 'Données reçues et transférées avec succès',
@@ -13,13 +20,14 @@ const handleCallback = async (req, res) => {
         });
     } catch (error) {
         console.error('Erreur dans le contrôleur :', error.message);
-    
+
         res.status(500).json({
             status: 'error',
             message: error.message,
         });
     }
 };
+
     
 module.exports = { handleCallback };
     

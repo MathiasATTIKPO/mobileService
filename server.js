@@ -14,6 +14,10 @@ app.use(express.json());
 app.use('/api', paymentRoutes);
 app.use('/api', callbackRoutes);
 
+app.use((req, res, next) => {
+    console.log(`[${req.method}] ${req.url}`, { body: req.body });
+    next();
+});
 
 
 // Lancer le serveur
