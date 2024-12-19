@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Notification</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="notification.ejs">Notification</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1>Notifications de Callback</h1>
+    <div id="notifications">
+        <p>En attente de notifications...</p>
+    </div>
+
+    <script>
+        const notificationsDiv = document.getElementById('notifications');
+        
+        const source = new EventSource('/api/notifications');
+        source.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            const notification = document.createElement('p');
+            notification.textContent = `Notification reçue : ${JSON.stringify(data)}`;
+            notificationsDiv.appendChild(notification);
+        };
+    </script>
+</body>
+</html>
