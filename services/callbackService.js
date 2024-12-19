@@ -1,5 +1,7 @@
 // services/callbackService.js
 const axios = require('axios'); // Pour envoyer les données vers une autre API
+const { EventEmitter } = require('events');
+const eventEmitter = new EventEmitter();
 
 exports.processCallback = async (data) => {
     try {
@@ -27,4 +29,7 @@ exports.processCallback = async (data) => {
         console.error('Erreur dans le service:', error.message);
         throw new Error('Traitement du callback échoué');
     }
+
+    eventEmitter.emit('callback', responsePayload);
+
 };

@@ -19,6 +19,24 @@ app.use((req, res, next) => {
     next();
 });
 
+// Serveur d'événements pour afficher les notifications en temps réel
+app.get('/api/notifications', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    const callbackListener = (data) => {
+        res.write(`data: ${JSON.stringify(data)}\n\n`);
+    };
+
+    eventEmitter.on('callback', callbackListener);
+
+    req.on('close', () => {
+        eventEmitter.removeListener('callback', callbackListener);
+    });
+});
+
+
 
 // Lancer le serveur
 const PORT = process.env.PORT || 3002;
