@@ -3,12 +3,12 @@ const axios = require('axios'); // Pour envoyer les données vers une autre API
 
 exports.processCallback = async (data) => {
     try {
-        const invoice = data.data.invoice;
+        //const invoice = data.data.invoice;
 
         // Extraire des informations pertinentes
         const responsePayload = {
-            token: invoice.token,
-            total_amount: invoice.total_amount,
+            token: data.data.invoice.token,
+            total_amount: data.data.invoice.total_amount,
             status: data.data.status,
             customer: {
                 name: data.data.customer.name,
