@@ -39,7 +39,7 @@ app.get('/api/notifications', (req, res) => {
 
 
 // Lancer le serveur
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
     console.log(`disponible à http://localhost:${PORT}`);
